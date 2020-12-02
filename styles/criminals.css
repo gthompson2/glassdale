@@ -1,0 +1,12 @@
+.criminalsContainer{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;    
+}
+
+.criminal{
+    width: 18em;
+    padding: 10px;
+    margin: 4px;
+    border: 1px solid black;
+}
