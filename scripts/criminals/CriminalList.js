@@ -1,6 +1,7 @@
 import { useCriminals, getCriminals } from './CriminalProvider.js';
 import { Criminal } from './Criminal.js';
 import { useConvictions } from '../convictions/ConvictionProvider.js'; // useConvictions isn't used by this file until ConvictionSelect pulls the data
+import { getOfficers, useOfficer } from '../officers/OfficerProvider.js';
 
 const eventHub = document.querySelector(".container") // listen for and make noise on container class element --> <main>
 const criminalElement = document.querySelector(".criminalsContainer"); // listen for and make noise on  criminalsContainer element --> <article>
@@ -47,8 +48,23 @@ eventHub.addEventListener('crimeChosen', event => {
 
        
     }
-}
-)
+})
+
+eventHub.addEventListener('officerChosen', event => {
+    if (event.detail.officerThatWasChosen !== "0"){
+        const officers = useOfficer()
+        // officer now holds the correct officer object after 
+        // identifying the object by id, 
+        // which corresponds with the correct option element's value
+        const officer = officers.find(officer => officer.id === parseInt(event.detail.officerThatWasChosen))
+        const criminals = useCriminals()
+        const matchingCriminals = criminals.filter((criminal) => {
+            return criminal.arrestingOfficer === officer.name
+        })
+        render(matchingCriminals)
+    }
+})
+
 
 
 // this is the only function that needs to be exported and called,
