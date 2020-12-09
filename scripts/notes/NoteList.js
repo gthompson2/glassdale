@@ -15,6 +15,18 @@ eventHub.addEventListener("showNotesClicked", customEvent => {
     NoteList()
 })
 
+/**  
+ * This event listener ensures that when a new note is saved while
+ * notes are being shown, the new note is generated
+*/
+eventHub.addEventListener("noteStateChanged", customEvent => {
+    // calling NoteList forces Notes to be displayed. Need to find a 
+    // way to Post to the API without this happening.
+    // make a function similar to NoteList without render?
+    // unlink and call render and NoteList separately?
+    getNotes()
+})
+
 const render = (noteArray) => {
     // generate HTML from array of note objects (noteArray)
     // join new HTML array into one big string
@@ -23,7 +35,7 @@ const render = (noteArray) => {
         return NoteHTMLConverter(noteObj)
     }).join("")
 
-    contentTarget.innerHTML = allNotesConvertedToStrings
+    contentTarget.innerHTML += allNotesConvertedToStrings
 }
 
 export const NoteList = () => {
