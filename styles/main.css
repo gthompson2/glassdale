@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Comfortaa|Patua+One");
 @import 'criminals.css';
+@import 'notes.css';
 
 /*Typography
 --------------------------------------------------------------*/
@@ -19,3 +20,15 @@ h1,h2,h3,h4,h5,h6 {
   
 }
 /*--------------------------------------------------------------*/
+.body {
+	display: flex;
+}
+
+.body__left {
+	max-width: 75%;
+}
+
+.filters {
+	display: flex;
+	justify-content: space-evenly;
+}

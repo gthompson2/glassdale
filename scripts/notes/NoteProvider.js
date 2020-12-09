@@ -7,7 +7,7 @@ const dispatchStateChangeEvent = () => {
 
 let notes = [];
 
-const getNotes = () => {
+export const getNotes = () => {
     return fetch('http://localhost:8088/notes')
         .then(response => response.json())
         .then(parsedNotes => {
@@ -16,14 +16,19 @@ const getNotes = () => {
 }
 
 export const saveNote = note => {
+    let stringifiedObj = JSON.stringify(note)
     return fetch('http://localhost:8088/notes', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(note)
+        body: stringifiedObj
     })
     .then(getNotes)
     .then(dispatchStateChangeEvent) 
     
+}
+
+export const useNotes = () => {
+    return notes.slice()
 }

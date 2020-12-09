@@ -1,0 +1,10 @@
+.note {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+}
+
+.noteFormContainer {
+    display: flex;
+    flex-direction: column;
+}
