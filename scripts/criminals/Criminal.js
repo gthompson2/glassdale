@@ -11,6 +11,9 @@ export const Criminal = (criminalObj) => {
                 <div>Crime: ${criminalObj.conviction}</div>
                 <div>Term start: ${new Date(criminalObj.incarceration.start).toLocaleDateString('en-US')}</div>
                 <div>Term end: ${new Date(criminalObj.incarceration.end).toLocaleDateString('en-US')}</div>
+                <div>
+                    <button class="associateButton" id="${criminalObj.id}">Associate Alibis</button>
+                </div>
             </section>        
     `
 }
