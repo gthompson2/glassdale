@@ -1,6 +1,7 @@
 import { useCriminals } from "../criminals/CriminalProvider.js"
 
 const eventHub = document.querySelector(".container")
+const contentTarget = document.querySelector(".alibiList")
 
 
 eventHub.addEventListener('alibiClicked', event => {
@@ -16,9 +17,9 @@ const alibiRender = (associateArray) => {
     let associateList = ``
     for (const associateObj of associateArray){
         associateList += `
-        Associate #${(associateArray.indexOf(associateObj))+1}: ${associateObj.name}
-        Alibi: ${associateObj.alibi}
+        <div><b>Associate #${(associateArray.indexOf(associateObj))+1}</b>: ${associateObj.name}
+        <br>&emsp;<b>Alibi</b>: ${associateObj.alibi}</div>
         `
     }
-    window.alert(associateList)
+    contentTarget.innerHTML = associateList
 }
