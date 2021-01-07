@@ -1,19 +1,18 @@
 import { saveNote } from "./NoteProvider.js";
+import { useCriminals, getCriminals } from "../criminals/CriminalProvider.js";
 
 /**
  * TODO:
  * 
- * Add event listener for a click on the form btn
+ *
+ * TODO:
  * 
- * Gather data from the form
+ * Connect notes to criminal objects by relating them via the criminal ID
  * 
- * Convert form data to an object
- * 
- * Create a custom event to broadcast the form data to 
- * whichever module is listening
- * 
- * Send the data to be stored in the DB via the API
+ * Grab value of criminalId from DOM when save note button is clicked
  */
+ 
+ 
 
 const contentTarget = document.querySelector(".noteFormContainer")
 const eventHub = document.querySelector(".container")
@@ -23,13 +22,13 @@ eventHub.addEventListener("click", clickEvent => {
         // gather the data from the form
         const author = document.querySelector("#author").value
         const text = document.querySelector("#text").value
-        const suspect = document.querySelector("#suspect").value
+        const criminalId = parseInt(document.querySelector("#suspect").value)
         // make a new object representation of a note
         const newNote = {
             // key/value pairs here
             author: author,
             text: text,
-            suspect: suspect,
+            criminalId: criminalId,
             timestamp: Date.now()
         }
         // Change API state and application state
@@ -38,14 +37,26 @@ eventHub.addEventListener("click", clickEvent => {
 })
 
 const render = () => {
+    const criminalsArray = useCriminals()
+    console.log("CriminalsArray: ", criminalsArray)
+
     contentTarget.innerHTML =`
         <input type="text" id="author" placeholder="Author">
         <textarea id="text" placeholder="note" text></textarea>
-        <input type="text" id="suspect" placeholder="Suspect Name">
+
+        <select id="suspect" class="criminalSelect">
+            <option value="0">Please select a suspect</option>
+            ${criminalsArray.map((criminal) => {
+                return `<option value="${ criminal.id }">${ criminal.name }</option>`  
+            })}
+        </select>
         <button id="saveNote">Save Note</button>
     `
 }
 
 export const NoteForm = () => {
-    render()
+    getCriminals()
+    .then( () => render())
+    
+    
 }

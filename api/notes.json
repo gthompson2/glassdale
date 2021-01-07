@@ -1,5 +1,11 @@
 {
   "notes": [
-    
+    {
+      "author": "Gregory",
+      "text": "Testing new notes features",
+      "criminalId": 3,
+      "timestamp": 1609970257525,
+      "id": 1
+    }
   ]
 }
