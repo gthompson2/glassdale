@@ -2,9 +2,9 @@
   "notes": [
     {
       "author": "Gregory",
-      "text": "This is a test of the updated notes feature",
-      "criminalId": 2,
-      "timestamp": 1609964946697,
+      "text": "Testing new notes features",
+      "criminalId": 3,
+      "timestamp": 1609970257525,
       "id": 1
     }
   ]

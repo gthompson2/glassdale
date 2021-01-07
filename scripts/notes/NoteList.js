@@ -3,7 +3,7 @@
  * Pull note data from the API and generate HTML using Note.js
  * render the HTML in the DOM
  */
-import { getNotes, useNotes } from "./NoteProvider.js";
+import { deleteNote, getNotes, useNotes } from "./NoteProvider.js";
 import { NoteHTMLConverter } from "./Note.js";
 import { useCriminals } from "../criminals/CriminalProvider.js";
 
@@ -22,11 +22,29 @@ eventHub.addEventListener("showNotesClicked", customEvent => {
  * notes are being shown, the new note is generated
 */
 eventHub.addEventListener("noteStateChanged", customEvent => {
-    // calling NoteList forces Notes to be displayed. Need to find a 
-    // way to Post to the API without this happening.
-    // make a function similar to NoteList without render?
-    // unlink and call render and NoteList separately?
+
+    // calling getNotes() by itself instead of NoteList() prevents 
+    // notes from being automatically displayed 
     getNotes()
+})
+
+eventHub.addEventListener("click", clickEvent => {
+    if (clickEvent.target.id.startsWith("deleteNote--")){
+        const [prefix, id] = clickEvent.target.id.split("--")
+        /*
+            Invoke the function that performs the delete operation.
+
+            Once the operation is complete you should THEN invoke
+            useNotes() and render the note list again
+        */
+       deleteNote(id).then(
+           () => {
+               const updatedNotes = useNotes()
+               const criminals = useCriminals()
+               render(updatedNotes, criminals)
+           }
+       )
+    }
 })
 
 const render = (noteArray, criminals) => {
@@ -42,7 +60,7 @@ const render = (noteArray, criminals) => {
         return NoteHTMLConverter(noteObj)
     }).join("")
 
-    contentTarget.innerHTML += allNotesConvertedToStrings
+    contentTarget.innerHTML = allNotesConvertedToStrings
 }
 
 export const NoteList = () => {
