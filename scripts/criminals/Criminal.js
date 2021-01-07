@@ -3,7 +3,7 @@
  * new Date().toLocalDateString() formats the date data in a way that is readable
  * 
  */
-export const Criminal = (criminalObj) => {
+export const Criminal = (criminalObj, facilities) => {
     return `
             <section class="criminal">
                 <h3>${criminalObj.name}</h3>
@@ -11,6 +11,12 @@ export const Criminal = (criminalObj) => {
                 <div>Crime: ${criminalObj.conviction}</div>
                 <div>Term start: ${new Date(criminalObj.incarceration.start).toLocaleDateString('en-US')}</div>
                 <div>Term end: ${new Date(criminalObj.incarceration.end).toLocaleDateString('en-US')}</div>
+                <div>
+                    <h2>Facilities:</h2>
+                    <ul>
+                        ${facilities.map((facility) => `<li>${facility.facilityName}</li>`).join("")}
+                    </ul>
+                </div>
                 <div>
                     <button class="associateButton" id="${criminalObj.id}">Associate Alibis</button>
                 </div>

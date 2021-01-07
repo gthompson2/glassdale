@@ -2,25 +2,36 @@ import { useCriminals, getCriminals } from './CriminalProvider.js';
 import { Criminal } from './Criminal.js';
 import { useConvictions } from '../convictions/ConvictionProvider.js'; // useConvictions isn't used by this file until ConvictionSelect pulls the data
 import { getOfficers, useOfficer } from '../officers/OfficerProvider.js';
+import { getFacilities, useFacilities } from '../facility/facilityProvider.js';
+import { getCriminalFacilities, useCriminalFacilities } from '../facility/criminalFacilityProvider.js';
 
 const eventHub = document.querySelector(".container") // listen for and make noise on container class element --> <main>
 const criminalElement = document.querySelector(".criminalsContainer"); // listen for and make noise on  criminalsContainer element --> <article>
                                                                         // criminalsContainer populates the body with the criminal data
 
 // render is in charge of generating HTML and populating the DOM
-const render = (criminals) => {
-    let criminalCards = []
-    // generate HTML based on criminals array, imported from useCriminals()
-    // store HTML in criminalCards array
-    for (const perp of criminals) {
-        criminalCards.push(Criminal(perp))
-    }
-    // add criminalCards elements to the DOM at criminalElement --> <article class="criminalsContainer">
-    criminalElement.innerHTML = criminalCards.join(" ")
+const render = (criminals, allFacilities, allRelationships) => {
+    // Step 1: Iterate all criminals
+    criminalElement.innerHTML = criminals.map(
+        (criminalObj) => {
+            // Step 2: Filter all relationships to get only ones for this criminal
+            const facilityRelationshipsForThisCriminal = allRelationships.filter(cf => cf.criminalId === criminalObj.id)
+
+            // Step 3: Convert the relationships to facilities with .map()
+            const facilities = facilityRelationshipsForThisCriminal.map(cf => {
+                const matchingFacilityObj = allFacilities.find(facility => facility.id === cf.facilityId)
+                return matchingFacilityObj
+            })
+
+            return Criminal(criminalObj, facilities)
+        }
+    ).join("")
 }
 
 //Listen for the custom event that was dispatched in ConvictionSelect
 //useConvictions isn't used by CriminalList.js until ConvictionSelect.js uses getConvictions
+
+// NEEDS TO BE REFACTORED NOW THAT RENDER IS BEING CHANGED
 eventHub.addEventListener('crimeChosen', event => {
     // Use the property that was added to event detail
     if (event.detail.crimeThatWasChosen !== "0") {
@@ -49,7 +60,7 @@ eventHub.addEventListener('crimeChosen', event => {
        
     }
 })
-
+// NEEDS TO BE REFACTORED NOW THAT RENDER IS BEING CHANGED
 eventHub.addEventListener('officerChosen', event => {
     if (event.detail.officerThatWasChosen !== "0"){
         const officers = useOfficer()
@@ -80,9 +91,19 @@ export const CriminalList = () => {
      * the results of calling fetch(). fetch() returns a promised object,
      * and by extension, getCriminals() does the same.
      */
-    getCriminals().then(() => {
-        let perp = useCriminals()
-        render(perp)
+    getCriminals()
+    // once we get criminal data, get data representing
+    // facilities and the criminal-facility relationship
+        .then(getFacilities)
+        .then(getCriminalFacilities)
+        .then(() => {
+            //pull in the data now that it has been fetched
+            const facilities = useFacilities()
+            const crimFac = useCriminalFacilities()
+            const criminals = useCriminals()
 
-    })
+                render(criminals, facilities, crimFac)
+        })
+        
+    
 }
