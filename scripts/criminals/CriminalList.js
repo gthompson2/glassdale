@@ -49,13 +49,15 @@ eventHub.addEventListener('crimeChosen', event => {
 
        // imports the array of criminal objects
        const criminals = useCriminals()
+       const facilities = useFacilities()
+       const crimFac = useCriminalFacilities()
        // fill a new array with only the criminals objects whose conviction value
        // matches with the crime that corresponds to event.detail.crimeThatWasChosen --> <option value="[someNum]">
        const matchingCriminals = criminals.filter((criminal) => {
            return criminal.conviction === crime.name
        })
        // send array of filtered criminals to render() to populate the DOM
-       render(matchingCriminals)
+       render(matchingCriminals, facilities, crimFac)
 
        
     }
@@ -69,10 +71,12 @@ eventHub.addEventListener('officerChosen', event => {
         // which corresponds with the correct option element's value
         const officer = officers.find(officer => officer.id === parseInt(event.detail.officerThatWasChosen))
         const criminals = useCriminals()
+        const facilities = useFacilities()
+        const crimFac = useCriminalFacilities()
         const matchingCriminals = criminals.filter((criminal) => {
             return criminal.arrestingOfficer === officer.name
         })
-        render(matchingCriminals)
+        render(matchingCriminals, facilities, crimFac)
     }
 })
 
